@@ -10,3 +10,6 @@ class Insta(object):
         with client(username, password) as cli:
             ig = cli.api()
             print(ig.current_user())
+
+    def post_image(self,image,caption,username=key.username,password=key.password):
+        pass
