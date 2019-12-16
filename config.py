@@ -24,4 +24,4 @@ class ConfigurationSetup(object):
             with open(self.root_path + r'\storage.json') as storage_config:
                 return json.load(storage_config)
         else:
-            raise Exception('File_Not_Found')
+            raise Exception('Config_Not_Found')
