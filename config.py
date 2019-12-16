@@ -7,7 +7,7 @@ class ConfigurationSetup(object):
         self.root_path =  "C:\\Program Files\\jtools\\insta_automator"
 
 
-    def generate_storage_json(self,root_path, content_folder):
+    def generate_storage_json(self,content_folder, root_path=None):
         root_path = self.root_path if root_path is None else root_path
         config = {
             'root_path'         : root_path,
@@ -20,6 +20,6 @@ class ConfigurationSetup(object):
     def return_storage_config(self):
         if os.path.exists("self.root_path + '\\storage.json'"):
             with open(self.root_path + '\\storage.json') as storage_config:
-                pass
+                return json.load(storage_config)
         else:
             raise Exception('File_Not_Found')
