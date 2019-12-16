@@ -18,6 +18,3 @@ class Insta(object):
     def post_story(self,image,username=key.username,password=key.password):
         with client(username, password) as cli:
             cli.upload(image, story=True)
-
-    def post_story(self, image, username=key.username, password=key.password):
-        pass
