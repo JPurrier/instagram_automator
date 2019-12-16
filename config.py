@@ -32,5 +32,6 @@ class ConfigurationSetup(object):
             with open(self.root_path + self.content_config_file) as content_config:
                 json.dump(config, content_config)
     
-    def udpate_content_config(self,id=None,description=None,uid=None,post_date=None,post_time=None,story=None,post=None):
+    def udpate_content_config(self,id=None,description=None,uid=None,
+                                post_date=None,post_time=None,story=None,post=None):
         pass
