@@ -32,6 +32,9 @@ class ConfigurationSetup(object):
             with open(self.root_path + self.content_config_file) as content_config:
                 json.dump(config, content_config)
     
-    def udpate_content_config(self,id=None,description=None,uid=None,
-                                post_date=None,post_time=None,story=None,post=None):
+    def update_content_config(self,id=None,description=None,uid=None,
+                                post_date=None,post_time=None,story=None,post=None,new_content_item=None):
+        # if no options are called scan directory and create entry for each item
+        # if content_item is specified will create entry for specfic entry
+        # if any other option is specified it will update the option id or uid will be manditory
         pass
