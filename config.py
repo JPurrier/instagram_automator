@@ -1,5 +1,5 @@
 import json
-
+import os
 
 
 class ConfigurationSetup(object):
@@ -16,3 +16,10 @@ class ConfigurationSetup(object):
         data = {}
         with open(self.root_path + '\\storage.json', 'w') as outfile:
             json.dump(data, outfile)
+
+    def return_storage_config(self):
+        if os.path.exists("self.root_path + '\\storage.json'"):
+            with open(self.root_path + '\\storage.json') as storage_config:
+                pass
+        else:
+            raise Exception('File_Not_Found')
