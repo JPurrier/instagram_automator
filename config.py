@@ -1,10 +1,10 @@
 import json
 import os
 
-
 class ConfigurationSetup(object):
     def __init__(self):
         self.root_path =  os.getenv('APPDATA') + '\\jtools'
+        self.content_config_file = r'\content.json'
 
     def generate_storage_json(self,content_folder, root_path=None):
         root_path = self.root_path if root_path is None else root_path
@@ -25,3 +25,9 @@ class ConfigurationSetup(object):
                 return json.load(storage_config)
         else:
             raise Exception('Config_Not_Found')
+
+    def create_pic_config(self, content_folder):
+        config = {}
+        if not os.path.exists(self.root_path + self.content_config_file):
+            with open(self.root_path + self.content_config_file) as content_config:
+                json.dump(config, content_config)
