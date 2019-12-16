@@ -4,7 +4,7 @@ import os
 
 class ConfigurationSetup(object):
     def __init__(self):
-        self.root_path =  r'C:\Program Files\jtools\insta_automator'
+        self.root_path =  os.getenv('APPDATA') + '\\jtools'
 
     def generate_storage_json(self,content_folder, root_path=None):
         root_path = self.root_path if root_path is None else root_path
@@ -12,17 +12,15 @@ class ConfigurationSetup(object):
             'root_path'         : root_path,
             'content_folder'    : content_folder
         }
-        data = {}
+        
         if not os.path.exists(root_path):
-            
             os.makedirs(root_path)
             print('making path '+ root_path)
-
         with open(root_path + r'\storage.json', 'w') as outfile:
-            json.dump(data, outfile)
+            json.dump(config, outfile)
 
     def return_storage_config(self):
-        if os.path.exists("self.root_path + r'\storage.json'"):
+        if os.path.exists(self.root_path + r'\storage.json'):
             with open(self.root_path + r'\storage.json') as storage_config:
                 return json.load(storage_config)
         else:
