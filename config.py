@@ -26,8 +26,11 @@ class ConfigurationSetup(object):
         else:
             raise Exception('Config_Not_Found')
 
-    def create_pic_config(self, content_folder):
+    def create_content_config(self, content_folder):
         config = {}
         if not os.path.exists(self.root_path + self.content_config_file):
             with open(self.root_path + self.content_config_file) as content_config:
                 json.dump(config, content_config)
+    
+    def udpate_content_config(self,id=None,description=None,uid=None,post_date=None,post_time=None,story=None,post=None):
+        pass
