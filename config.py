@@ -13,6 +13,7 @@ class ConfigurationSetup(object):
             'root_path'         : root_path,
             'content_folder'    : content_folder
         }
+    
         
         if not os.path.exists(root_path):
             os.makedirs(root_path)
@@ -38,7 +39,8 @@ class ConfigurationSetup(object):
         storage_config = ConfigurationSetup().return_storage_config()
         list_of_content = os.listdir(storage_config['content_folder'])
         # if no options are called scan directory and create entry for each item
-        if(id is None and description is None and uid is None ):
+        if(id is None and description is None and uid is None and post_date is None and post_time is None
+            and story is None and post is None and new_content_item is None ):
             pass
         
 
