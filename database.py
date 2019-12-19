@@ -7,7 +7,7 @@ class DatabaseInteractions(object):
         conn = None
         try:
             conn = sqlite3.connect(db_file)
-            print(sqlite3.version)
+            print(sqlite3.version_info)
         except Error as e:
             print(e)
         return conn
