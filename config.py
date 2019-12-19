@@ -39,12 +39,14 @@ class ConfigurationSetup(object):
     def update_content_config(self,id=None,description=None,uid=None,
                                 post_date=None,post_time=None,story=None,post=None,new_content_item=None):
         storage_config = ConfigurationSetup().return_storage_config()
+        DatabaseInteractions().create_connection((storage_config['content_folder'] + '\\' + self.database_name))
+        
         list_of_content = os.listdir(storage_config['content_folder'])
         # if no options are called scan directory and create entry for each item
         if(id is None and description is None and uid is None and post_date is None and post_time is None
             and story is None and post is None and new_content_item is None ):
             pass
-        
+         
 
         # if content_item is specified will create entry for specfic entry
         # if any other option is specified it will update the option id or uid will be manditory
