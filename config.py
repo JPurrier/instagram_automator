@@ -1,11 +1,13 @@
 import json
 import os
 import hashlib
+from database import DatabaseInteractions
 
 class ConfigurationSetup(object):
     def __init__(self):
         self.root_path =  os.getenv('APPDATA') + '\\jtools'
         self.content_config_file = r'\content.json'
+        self.database_name = 'Jtools_instagram.db'
 
     def generate_storage_json(self,content_folder, root_path=None):
         root_path = self.root_path if root_path is None else root_path
