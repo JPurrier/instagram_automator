@@ -40,18 +40,23 @@ class ConfigurationSetup(object):
                                 post_date=None,post_time=None,story=None,post=None,new_content_item=None):
         '''
         if no input should create database
-        >>> update_content_config()
+        >>> ConfigurationSetup().update_content_config()
         (2, 6, 0)
+        No option selected
 
         '''
         storage_config = ConfigurationSetup().return_storage_config()
         db_connection = DatabaseInteractions().create_connection((storage_config['root_path'] + '\\' + self.database_name))
         db_connection.close()
         list_of_content = os.listdir(storage_config['content_folder'])
+        # Get Content table from DB if table is missing initialise table
+
         # if no options are called scan directory and create entry for each item
         if(id is None and description is None and uid is None and post_date is None and post_time is None
             and story is None and post is None and new_content_item is None ):
             print('No option selected')
+            print(list_of_content)
+
          
 
         # if content_item is specified will create entry for specfic entry
@@ -60,4 +65,4 @@ class ConfigurationSetup(object):
 if __name__ == '__main__':
     ConfigurationSetup().update_content_config()
     import doctest
-    doctest.testmod()
+    #doctest.testmod()
