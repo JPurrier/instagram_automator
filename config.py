@@ -39,7 +39,7 @@ class ConfigurationSetup(object):
     def update_content_config(self,id=None,description=None,uid=None,
                                 post_date=None,post_time=None,story=None,post=None,new_content_item=None):
         storage_config = ConfigurationSetup().return_storage_config()
-        db_connection = DatabaseInteractions().create_connection((storage_config['content_folder'] + '\\' + self.database_name))
+        db_connection = DatabaseInteractions().create_connection((storage_config['root_path'] + '\\' + self.database_name))
         db_connection.close()
         list_of_content = os.listdir(storage_config['content_folder'])
         # if no options are called scan directory and create entry for each item
