@@ -61,13 +61,6 @@ class ConfigurationSetup(object):
 
     def update_content_info(self,jid=None,file_name=None,description=None,
                                 post_date=None,story=None):
-        '''
-        if no input should create database
-        >>> ConfigurationSetup().update_content_config()
-        (2, 6, 0)
-        No option selected
-
-        '''
         storage_config = ConfigurationSetup().return_storage_config()
         db_connection = DatabaseInteractions().create_connection((storage_config['root_path'] + '\\' + self.database_name))
 
@@ -76,8 +69,6 @@ class ConfigurationSetup(object):
         c = db_connection.cursor()
             # Creates table if ! exist
         c.execute(tables.content_table)
-
-
 
 
         # if no options are called scan directory and create entry for each item
