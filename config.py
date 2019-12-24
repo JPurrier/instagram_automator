@@ -2,6 +2,7 @@ import json
 import os
 import hashlib
 from database import DatabaseInteractions
+import tables
 
 class ConfigurationSetup(object):
     def __init__(self):
@@ -36,6 +37,14 @@ class ConfigurationSetup(object):
             with open(self.root_path + self.content_config_file) as content_config:
                 json.dump(config, content_config)
 
+    def create_content_entry(self,conn,item):
+        sql = ''' INSERT INTO content(file_name,description,post_date,story)
+                      VALUES(?,?,?,?); '''
+        cur = conn.cursor()
+        cur.execute(sql, item)
+        con.commit()
+        return cur.lastrowid
+
     def update_content_config(self,jid=None,file_name=None,description=None,
                                 post_date=None,story=None):
         '''
@@ -47,22 +56,38 @@ class ConfigurationSetup(object):
         '''
         storage_config = ConfigurationSetup().return_storage_config()
         db_connection = DatabaseInteractions().create_connection((storage_config['root_path'] + '\\' + self.database_name))
-        db_connection.close()
+
         list_of_content = os.listdir(storage_config['content_folder'])
         # Get Content table from DB if table is missing initialise table
-        
+        c = db_connection.cursor()
+            # Creates table if ! exist
+        c.execute(tables.content_table)
+            # Get table contents
+        c.execute('SELECT * FROM content')
+        sql_content_table = c.fetchall()
+
+
         # if no options are called scan directory and create entry for each item
         if(jid is None and description is None and post_date is None
             and story is None and file_name is None):
             print('No option selected')
             print(list_of_content)
+            print(sql_content_table)
+
 
          
 
         # if content_item is specified will create entry for specfic entry
         # if any other option is specified it will update the option id or uid will be manditory
-        
+        db_connection.close()
+
 if __name__ == '__main__':
     ConfigurationSetup().update_content_config()
-    import doctest
-    #doctest.testmod()
+    storage_config = ConfigurationSetup().return_storage_config()
+    con = DatabaseInteractions().create_connection((storage_config['root_path'] + "\\" + ConfigurationSetup().database_name))
+    cursor = con.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    #print(cursor.fetchall())
+    test = ('file_test_x', 'this_is a test description', 'hh', 'story')
+    ConfigurationSetup().create_content_entry(con,test)
+    con.close()
