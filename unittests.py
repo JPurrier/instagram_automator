@@ -4,6 +4,11 @@ from database import DatabaseInteractions
 
 class TestConfig(unittest.TestCase):
 
+    def test_update_content_info(self):
+        print('****Running update_content_config module no options selected')
+        result = ConfigurationSetup().update_content_info()
+        print(result)
+
     def test_create_db_entry(self):
         print('****Testing that Record is being created')
         storage_config = ConfigurationSetup().return_storage_config()
@@ -32,11 +37,6 @@ class TestConfig(unittest.TestCase):
         result_bool = con.cursor().fetchall()
         con.close()
         self.assertFalse(result_bool)
-
-    def test_update_content_info(self):
-        print('****Running update_content_config module no options selected')
-        result = ConfigurationSetup().update_content_info()
-        print(result)
 
     def test_get_content_info(self):
         print('****Check get content method')

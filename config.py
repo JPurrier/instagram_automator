@@ -69,17 +69,19 @@ class ConfigurationSetup(object):
         # if no options are called scan directory and create entry for each item
         if(jid is None and description is None and post_date is None
             and story is None and file_name is None and reindex is None):
-            #print('No option selected running scan and update')
             # Check each item in directory to see if its in the database
             for content in list_of_content:
                 # if in database continue
                 if content in db_entries:
                     pass
                 else:
+                    # if not in database check for jid
                     print('content: ' + content)
-                # if not in database check for jid
 
-                # if no jid add to database and write metadata jid
+
+                    # if no jid add to database and write metadata jid
+                    # if jid is present confirm entry in database
+                    # if jid is not in database re-add content to database with new jid
             pass
 
 
