@@ -12,6 +12,7 @@ class TestConfig(unittest.TestCase):
         ConfigurationSetup().create_content_entry(con, test)
         con.commit()
         con.close()
+        # check if record exists
 
 if __name__ == '__main__':
     unittest.main()
