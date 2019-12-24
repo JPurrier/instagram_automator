@@ -36,8 +36,8 @@ class ConfigurationSetup(object):
             with open(self.root_path + self.content_config_file) as content_config:
                 json.dump(config, content_config)
 
-    def update_content_config(self,id=None,description=None,uid=None,
-                                post_date=None,post_time=None,story=None,post=None,new_content_item=None):
+    def update_content_config(self,jid=None,file_name=None,description=None,
+                                post_date=None,story=None):
         '''
         if no input should create database
         >>> ConfigurationSetup().update_content_config()
@@ -50,10 +50,10 @@ class ConfigurationSetup(object):
         db_connection.close()
         list_of_content = os.listdir(storage_config['content_folder'])
         # Get Content table from DB if table is missing initialise table
-
+        
         # if no options are called scan directory and create entry for each item
-        if(id is None and description is None and uid is None and post_date is None and post_time is None
-            and story is None and post is None and new_content_item is None ):
+        if(jid is None and description is None and post_date is None
+            and story is None and file_name is None):
             print('No option selected')
             print(list_of_content)
 
