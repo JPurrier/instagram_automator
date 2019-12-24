@@ -46,7 +46,20 @@ class ConfigurationSetup(object):
         conn.commit()
         return cur.lastrowid
 
-    def update_content_config(self,jid=None,file_name=None,description=None,
+    def get_content_info(self):
+        storage_config = ConfigurationSetup().return_storage_config()
+        db_connection = DatabaseInteractions().create_connection(
+            (storage_config['root_path'] + '\\' + self.database_name))
+
+        c = db_connection.cursor()
+        # Get table contents
+        c.execute('SELECT * FROM content')
+        sql_content_table = c.fetchall()
+        return sql_content_table
+
+
+
+    def update_content_info(self,jid=None,file_name=None,description=None,
                                 post_date=None,story=None):
         '''
         if no input should create database
@@ -63,17 +76,17 @@ class ConfigurationSetup(object):
         c = db_connection.cursor()
             # Creates table if ! exist
         c.execute(tables.content_table)
-            # Get table contents
-        c.execute('SELECT * FROM content')
-        sql_content_table = c.fetchall()
+
+
 
 
         # if no options are called scan directory and create entry for each item
         if(jid is None and description is None and post_date is None
             and story is None and file_name is None):
-            print('No option selected')
-            print(list_of_content)
-            print(sql_content_table)
+            print('No option selected running scan and update')
+            #print(list_of_content)
+            #print(sql_content_table)
+            pass
 
 
          
