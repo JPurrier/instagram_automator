@@ -11,7 +11,15 @@ class TestConfig(unittest.TestCase):
         test = ('file_testx', 'th_is a test description', 'hh', 'story')
         ConfigurationSetup().create_content_entry(con, test)
         con.commit()
+        c = con.cursor()
+        c.execute("select exists(select 1 from content where file_name='file_testx');")
+        result_bool = c.fetchall()
         con.close()
+        print(result_bool)
+        bool_result = True if 1 in result_bool else False
+        print(bool_result)
+        #self.assertTrue(bool_result[0])
+
         # check if record exists
 
 if __name__ == '__main__':
