@@ -5,6 +5,7 @@ from database import DatabaseInteractions
 class TestConfig(unittest.TestCase):
 
     def test_create_db_entry(self):
+        print('****Testing that Record is being created')
         storage_config = ConfigurationSetup().return_storage_config()
         con = DatabaseInteractions().create_connection(
             (storage_config['root_path'] + '\\' + ConfigurationSetup().database_name))
@@ -15,13 +16,13 @@ class TestConfig(unittest.TestCase):
         c.execute("select exists(select 1 from content where file_name='file_testx');")
         result_bool = c.fetchall()
         con.close()
-        print('Testing that Record is being created')
+
         bool_result = True if 1 in result_bool[0] else False
         print(bool_result)
         self.assertTrue(bool_result)
 
     def test_delete_db_entry(self):
-        print('Testing removing Database Entry(s)')  # Clean up db
+        print('****Testing removing Database Entry(s)')  # Clean up db
         storage_config = ConfigurationSetup().return_storage_config()
         con = DatabaseInteractions().create_connection(
             (storage_config['root_path'] + '\\' + ConfigurationSetup().database_name))
@@ -33,12 +34,12 @@ class TestConfig(unittest.TestCase):
         self.assertFalse(result_bool)
 
     def test_update_content_info(self):
+        print('****Running update_content_config module no options selected')
         result = ConfigurationSetup().update_content_info()
-        print('Running update_content_config module')
         print(result)
 
     def test_get_content_info(self):
-        print('Check get content method')
+        print('****Check get content method')
         result = ConfigurationSetup().get_content_info()
         print(result)
 
