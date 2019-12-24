@@ -31,12 +31,6 @@ class ConfigurationSetup(object):
         else:
             raise Exception('Config_Not_Found')
 
-    def create_content_config(self, content_folder):
-        config = {}
-        if not os.path.exists(self.root_path + self.content_config_file):
-            with open(self.root_path + self.content_config_file) as content_config:
-                json.dump(config, content_config)
-
     def create_content_entry(self,conn,item):
 
         sql = ''' INSERT INTO content(file_name,description,post_date,story)
@@ -60,7 +54,7 @@ class ConfigurationSetup(object):
 
 
     def update_content_info(self,jid=None,file_name=None,description=None,
-                                post_date=None,story=None):
+                                post_date=None,story=None,reindex=None):
         storage_config = ConfigurationSetup().return_storage_config()
         db_connection = DatabaseInteractions().create_connection((storage_config['root_path'] + '\\' + self.database_name))
 
@@ -69,14 +63,20 @@ class ConfigurationSetup(object):
         c = db_connection.cursor()
             # Creates table if ! exist
         c.execute(tables.content_table)
+        # Get Current Database Config
 
 
         # if no options are called scan directory and create entry for each item
         if(jid is None and description is None and post_date is None
-            and story is None and file_name is None):
+            and story is None and file_name is None and reindex is None):
             print('No option selected running scan and update')
-            #print(list_of_content)
-            #print(sql_content_table)
+            # Check each item in directory to see if its in the database
+
+                # if in database continue
+
+                # if not in database check for jid
+
+                # if no jid add to database and write metadata jid
             pass
 
 

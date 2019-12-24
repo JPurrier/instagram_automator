@@ -3,6 +3,7 @@ content_table = """CREATE TABLE IF NOT EXISTS content (
     file_name text NOT NULL,
     description text ,
     post_date text,
-    story text
+    story text,
+    posted INTEGER 
 );"""
 
