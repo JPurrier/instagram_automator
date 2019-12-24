@@ -38,11 +38,12 @@ class ConfigurationSetup(object):
                 json.dump(config, content_config)
 
     def create_content_entry(self,conn,item):
+
         sql = ''' INSERT INTO content(file_name,description,post_date,story)
                       VALUES(?,?,?,?); '''
         cur = conn.cursor()
         cur.execute(sql, item)
-        con.commit()
+        conn.commit()
         return cur.lastrowid
 
     def update_content_config(self,jid=None,file_name=None,description=None,
@@ -83,11 +84,5 @@ class ConfigurationSetup(object):
 
 if __name__ == '__main__':
     ConfigurationSetup().update_content_config()
-    storage_config = ConfigurationSetup().return_storage_config()
-    con = DatabaseInteractions().create_connection((storage_config['root_path'] + "\\" + ConfigurationSetup().database_name))
-    cursor = con.cursor()
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    #print(cursor.fetchall())
-    test = ('file_test_x', 'this_is a test description', 'hh', 'story')
-    ConfigurationSetup().create_content_entry(con,test)
-    con.close()
+
+
