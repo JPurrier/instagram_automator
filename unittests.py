@@ -14,7 +14,7 @@ class TestConfig(unittest.TestCase):
         storage_config = ConfigurationSetup().return_storage_config()
         con = DatabaseInteractions().create_connection(
             (storage_config['root_path'] + '\\' + ConfigurationSetup().database_name))
-        test = ('file_testx', 'th_is a test description', 'hh', 'story')
+        test = ('file_testx', 'th_is a test description', 'DATE', 'Story_text','TRUE', '4d901fe1411f32455e59b9309d63b6fx')
         ConfigurationSetup().create_content_entry(con, test)
         con.commit()
         c = con.cursor()

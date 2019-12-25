@@ -36,8 +36,8 @@ class ConfigurationSetup(object):
 
     def create_content_entry(self,conn,item):
 
-        sql = ''' INSERT INTO content(file_name,description,post_date,story)
-                      VALUES(?,?,?,?); '''
+        sql = ''' INSERT INTO content(file_name,description,post_date,story,posted,jid)
+                      VALUES(?,?,?,?,?,?); '''
         cur = conn.cursor()
         cur.execute(sql, item)
         conn.commit()
@@ -64,8 +64,8 @@ class ConfigurationSetup(object):
                 buf = afile.read(BLOCKSIZE)
         return(hasher.hexdigest())
 
-    def update_content_info(self,jid=None,file_name=None,description=None,
-                                post_date=None,story=None,reindex=None):
+    def update_content_info(self,id=None,file_name=None,description=None,
+                                post_date=None,story=None,posted=None,jid=None,reindex=None):
         storage_config = ConfigurationSetup().return_storage_config()
         db_connection = DatabaseInteractions().create_connection((storage_config['root_path'] + '\\' + self.database_name))
 
@@ -83,11 +83,23 @@ class ConfigurationSetup(object):
             # Check each item in directory to see if its in the database
             for content in list_of_content:
                 # if in database continue
-                if content in db_entries:
-                    continue
-                else:
-                    # if not in database check for jid
-                    print('content: ' + content)
+                for db_row in db_entries:
+                    if content in db_row:
+                        # print('in db :' + content)
+                        pass
+                    else:
+                        # if not in database get hash
+                        jid = ConfigurationSetup().get_content_hash(storage_config['content_folder'] + '\\' + content)
+                        # compare hash with jid
+                        if jid in db_row:
+                            print('hash in db: ' + jid)
+                            print('name:' + content)
+                            # update name field with new name
+                        else:
+                            # add item to database
+                            pass
+
+                    print(content)
 
 
 
