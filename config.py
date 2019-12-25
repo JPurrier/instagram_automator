@@ -3,6 +3,8 @@ import os
 import hashlib
 from database import DatabaseInteractions
 import tables
+import pyexiv2
+
 
 class ConfigurationSetup(object):
     def __init__(self):
@@ -73,10 +75,13 @@ class ConfigurationSetup(object):
             for content in list_of_content:
                 # if in database continue
                 if content in db_entries:
-                    pass
+                    continue
                 else:
                     # if not in database check for jid
                     print('content: ' + content)
+                    for item in content:
+                        metadata = pyexiv2.ImageMetadata(storage_config['content_folder'] + '\\' + content)
+                        metadata.read()
 
 
                     # if no jid add to database and write metadata jid
