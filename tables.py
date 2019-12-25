@@ -8,3 +8,7 @@ content_table = """CREATE TABLE IF NOT EXISTS content (
     jid text
 );"""
 
+update_name = """ UPDATE content
+                SET file_name = ?
+                WHERE id = ?"""
+

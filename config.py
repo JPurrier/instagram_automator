@@ -65,7 +65,7 @@ class ConfigurationSetup(object):
         return(hasher.hexdigest())
 
     def update_content_info(self,id=None,file_name=None,description=None,
-                                post_date=None,story=None,posted=None,jid=None,reindex=None):
+                                post_date=None,story=None,posted=None,jid=None):
         storage_config = ConfigurationSetup().return_storage_config()
         db_connection = DatabaseInteractions().create_connection((storage_config['root_path'] + '\\' + self.database_name))
 
@@ -74,12 +74,13 @@ class ConfigurationSetup(object):
         c = db_connection.cursor()
             # Creates table if ! exist
         c.execute(tables.content_table)
+        db_connection.commit()
         # Get Current Database Config
         db_entries = ConfigurationSetup().get_content_info()
 
         # if no options are called scan directory and create entry for each item
         if(jid is None and description is None and post_date is None
-            and story is None and file_name is None and reindex is None):
+            and story is None and file_name is None):
             # Check each item in directory to see if its in the database
             for content in list_of_content:
                 # if in database continue
@@ -90,30 +91,27 @@ class ConfigurationSetup(object):
                     else:
                         # if not in database get hash
                         jid = ConfigurationSetup().get_content_hash(storage_config['content_folder'] + '\\' + content)
-                        # compare hash with jid
+                        # compare hash with jid if exist in database update
                         if jid in db_row:
+                            print('Need to update name in db')
                             print('hash in db: ' + jid)
                             print('name:' + content)
+                            print(db_row)
                             # update name field with new name
+                            update_content = (content,db_row[0])
+                            c.execute(tables.update_name, update_content)
+                            db_connection.commit()
                         else:
                             # add item to database
                             pass
 
-                    print(content)
-
-
-
-                    # if no jid add to database and write metadata jid
-                    # if jid is present confirm entry in database
-                    # if jid is not in database re-add content to database with new jid
-            pass
-
-
-         
-
         # if content_item is specified will create entry for specfic entry
         # if any other option is specified it will update the option id or uid will be manditory
+
         db_connection.close()
+
+    def reindex_db(self,reindex=False):
+        pass
 
 if __name__ == '__main__':
     ConfigurationSetup().update_content_config()
