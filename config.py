@@ -3,7 +3,8 @@ import os
 import hashlib
 from database import DatabaseInteractions
 import tables
-import pyexiv2
+import hashlib
+
 
 
 class ConfigurationSetup(object):
@@ -53,7 +54,15 @@ class ConfigurationSetup(object):
         sql_content_table = c.fetchall()
         return sql_content_table
 
-
+    def get_content_hash(self,content):
+        BLOCKSIZE = 65536
+        hasher = hashlib.md5()
+        with open(content, 'rb') as afile:
+            buf = afile.read(BLOCKSIZE)
+            while len(buf) > 0:
+                hasher.update(buf)
+                buf = afile.read(BLOCKSIZE)
+        return(hasher.hexdigest())
 
     def update_content_info(self,jid=None,file_name=None,description=None,
                                 post_date=None,story=None,reindex=None):
@@ -79,9 +88,7 @@ class ConfigurationSetup(object):
                 else:
                     # if not in database check for jid
                     print('content: ' + content)
-                    for item in content:
-                        metadata = pyexiv2.ImageMetadata(storage_config['content_folder'] + '\\' + content)
-                        metadata.read()
+
 
 
                     # if no jid add to database and write metadata jid

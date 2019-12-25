@@ -46,6 +46,13 @@ class TestConfig(unittest.TestCase):
     def test_return_storage_config(self):
         ConfigurationSetup().return_storage_config()
 
+    def test_get_content_hash(self):
+        print('****** Get image hash *****')
+        result = ConfigurationSetup().get_content_hash('c:\\sample\\IMG_6183.JPG')
+        print('Hash MD5: ' + result)
+
 
 if __name__ == '__main__':
+    import os
+    os.system('cls')
     unittest.main()
