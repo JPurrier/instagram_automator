@@ -64,12 +64,28 @@ class ConfigurationSetup(object):
                 buf = afile.read(BLOCKSIZE)
         return(hasher.hexdigest())
 
+    def initialise_db_content(self,list_of_content):
+        storage_config = ConfigurationSetup().return_storage_config()
+        db_connection = DatabaseInteractions().create_connection(
+            (storage_config['root_path'] + '\\' + self.database_name))
+        c = db_connection.cursor()
+        content_update_table = []
+        for content in list_of_content:
+            jid = ConfigurationSetup().get_content_hash(
+                storage_config['content_folder'] + '\\' + content)
+            data_to_input_into_db = (content, jid)
+            c.execute(tables.add_content, data_to_input_into_db)
+            db_connection.commit()
+            content_update_table.append({content:jid})
+        return content_update_table
+
     def update_content_info(self,id=None,file_name=None,description=None,
                                 post_date=None,story=None,posted=None,jid=None):
         storage_config = ConfigurationSetup().return_storage_config()
         db_connection = DatabaseInteractions().create_connection((storage_config['root_path'] + '\\' + self.database_name))
 
         list_of_content = os.listdir(storage_config['content_folder'])
+        print('LIST OF CONTENT: {}'.format(list_of_content))
         # Get Content table from DB if table is missing initialise table
         c = db_connection.cursor()
             # Creates table if ! exist
@@ -84,13 +100,17 @@ class ConfigurationSetup(object):
             # Check each item in directory to see if its in the database
             for content in list_of_content:
                 # if in database continue
+                if not db_entries:
+                    ConfigurationSetup().initialise_db_content(list_of_content)
+                    return 'Database Empty initialisation run'
                 for db_row in db_entries:
                     if content in db_row:
-                        # print('in db :' + content)
+                        print('in db :' + content)
                         pass
                     else:
-                        # if not in database get hash
+                        # if not in database get hash / jid
                         jid = ConfigurationSetup().get_content_hash(storage_config['content_folder'] + '\\' + content)
+                        print('jID: {}'.format(jid))
                         # compare hash with jid if exist in database update
                         if jid in db_row:
                             print('Need to update name in db')
@@ -101,9 +121,19 @@ class ConfigurationSetup(object):
                             update_content = (content,db_row[0])
                             c.execute(tables.update_name, update_content)
                             db_connection.commit()
+                            continue
                         else:
                             # add item to database
-                            pass
+                            #Get Jid MD5 Hash
+                            jid = ConfigurationSetup().get_content_hash(
+                                storage_config['content_folder'] + '\\' + content)
+                            data_to_input_into_db = (content, jid)
+                            print('Added: {} | {}'.format(content, jid))
+
+                            c.execute(tables.add_content,data_to_input_into_db)
+                            db_connection.commit()
+
+
 
         # if content_item is specified will create entry for specfic entry
         # if any other option is specified it will update the option id or uid will be manditory

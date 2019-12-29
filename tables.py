@@ -12,3 +12,7 @@ update_name = """ UPDATE content
                 SET file_name = ?
                 WHERE id = ?"""
 
+add_content = """INSERT INTO content
+                (file_name, jid)
+                VALUES (?,?);"""
+
