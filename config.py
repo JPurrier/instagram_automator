@@ -99,51 +99,44 @@ class ConfigurationSetup(object):
             and story is None and file_name is None):
             # Check each item in directory to see if its in the database
             if not db_entries:
+                # if database is empty
                 ConfigurationSetup().initialise_db_content(list_of_content)
                 return 'Database Empty initialisation run'
 
-            for db_row in db_entries:
-                for content in list_of_content:
-                    i = 0
-                   # if database is empty
+            for content in list_of_content:
+                # if in database continue
+                i = 0
 
-                    # if in database continue
-
-                    if content in db_row:
+                for row in db_entries:
+                    if content in row:
                         print('in db :' + content)
                         i = 1
                         continue
                     else:
+                        jid = ConfigurationSetup().get_content_hash(storage_config['content_folder'] + '\\' + content)
                         # if not in database get hash / jid
-                        if i == 1:
-                            continue
+                        if jid in row:
+                            print('Need to update name in db')
+                            #print('hash in db: ' + jid)
+                            print('name:' + content)
+                            print(row)
+                            # update name field with new name
+                            update_content = (content,row[0])
+                            c.execute(tables.update_name, update_content)
+                            db_connection.commit()
+                            i = 1
 
-                            jid = ConfigurationSetup().get_content_hash(storage_config['content_folder'] + '\\' + content)
-                            print('jID: {}'.format(jid))
-                            # compare hash with jid if exist in database update
-                            if jid in db_row:
-                                print('Need to update name in db')
-                                print('hash in db: ' + jid)
-                                print('name:' + content)
-                                print(db_row)
-                                # update name field with new name
-                                update_content = (content,db_row[0])
-                                c.execute(tables.update_name, update_content)
-                                db_connection.commit()
-                                i = 1
-                            else:
-                                if i == 1:
-                                    continue
-                                # add item to database
-                                #Get Jid MD5 Hash
-                                jid = ConfigurationSetup().get_content_hash(
-                                    storage_config['content_folder'] + '\\' + content)
-                                data_to_input_into_db = (content, jid)
-                                print('Added: {} | {}'.format(content, jid))
-
-                                c.execute(tables.add_content,data_to_input_into_db)
-                                db_connection.commit()
-                                i = 1
+                if i == 1:
+                    continue
+                else:
+                    print('i {} c {}'.format( i, content))
+                    if i != 1:
+                        # add item to database
+                        print('i = {} content = {} '.format(i,  content))
+                        data_to_input_into_db = (content, jid)
+                        print('Added: {} | {}'.format(content, jid))
+                        c.execute(tables.add_content, data_to_input_into_db)
+                        db_connection.commit()
 
 
 
