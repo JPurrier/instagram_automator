@@ -54,6 +54,13 @@ class TestConfig(unittest.TestCase):
     def test_reindex_db(self):
         ConfigurationSetup().reindex_db()
 
+    def test_update_content_gui(self):
+        from random import random
+        print("**** Running Modify Record ****")
+        item = ('test_name.jpg','test description' + str(random()),'','TRUE','','1')
+        print(""" XXXXX Modifying record XXXXX""")
+        ConfigurationSetup().update_content_gui(item)
+
 
 if __name__ == '__main__':
     import os

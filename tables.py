@@ -5,7 +5,7 @@ content_table = """CREATE TABLE IF NOT EXISTS content (
     post_date text,
     story text,
     posted INTEGER,
-    jid text
+    jid text UNIQUE 
 );"""
 
 update_name = """ UPDATE content
@@ -15,4 +15,13 @@ update_name = """ UPDATE content
 add_content = """INSERT INTO content
                 (file_name, jid)
                 VALUES (?,?);"""
+
+update_general =""" UPDATE content
+                    SET file_name = ?, 
+                    description = ?, 
+                    post_date = ?, 
+                    story = ?, 
+                    posted = ?
+                    WHERE id = ?                    
+"""
 

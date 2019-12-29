@@ -13,6 +13,13 @@ class ConfigurationSetup(object):
         self.content_config_file = r'\content.json'
         self.database_name = 'Jtools_instagram.db'
 
+    def start_db_con(self):
+        storage_config = ConfigurationSetup().return_storage_config()
+        db_connection = DatabaseInteractions().create_connection(
+            (storage_config['root_path'] + '\\' + self.database_name))
+        return db_connection
+
+
     def generate_storage_json(self,content_folder, root_path=None):
         root_path = self.root_path if root_path is None else root_path
         config = {
@@ -34,19 +41,8 @@ class ConfigurationSetup(object):
         else:
             raise Exception('Config_Not_Found')
 
-    def create_content_entry(self,conn,item):
-
-        sql = ''' INSERT INTO content(file_name,description,post_date,story,posted,jid)
-                      VALUES(?,?,?,?,?,?); '''
-        cur = conn.cursor()
-        cur.execute(sql, item)
-        conn.commit()
-        return cur.lastrowid
-
     def get_content_info(self):
-        storage_config = ConfigurationSetup().return_storage_config()
-        db_connection = DatabaseInteractions().create_connection(
-            (storage_config['root_path'] + '\\' + self.database_name))
+        db_connection = ConfigurationSetup().start_db_con()
 
         c = db_connection.cursor()
         # Get table contents
@@ -66,8 +62,7 @@ class ConfigurationSetup(object):
 
     def initialise_db_content(self,list_of_content):
         storage_config = ConfigurationSetup().return_storage_config()
-        db_connection = DatabaseInteractions().create_connection(
-            (storage_config['root_path'] + '\\' + self.database_name))
+        db_connection = ConfigurationSetup().start_db_con()
         c = db_connection.cursor()
         content_update_table = []
         for content in list_of_content:
@@ -82,7 +77,7 @@ class ConfigurationSetup(object):
     def update_content_info(self,id=None,file_name=None,description=None,
                                 post_date=None,story=None,posted=None,jid=None):
         storage_config = ConfigurationSetup().return_storage_config()
-        db_connection = DatabaseInteractions().create_connection((storage_config['root_path'] + '\\' + self.database_name))
+        db_connection = ConfigurationSetup().start_db_con()
 
         list_of_content = os.listdir(storage_config['content_folder'])
         print('LIST OF CONTENT: {}'.format(list_of_content))
@@ -138,15 +133,24 @@ class ConfigurationSetup(object):
                         c.execute(tables.add_content, data_to_input_into_db)
                         db_connection.commit()
 
-
-
-        # if content_item is specified will create entry for specfic entry
-        # if any other option is specified it will update the option id or uid will be manditory
-
         db_connection.close()
 
     def reindex_db(self,reindex=False):
         pass
+
+    def update_content_gui(self,item):
+        conn = ConfigurationSetup().start_db_con()
+        cur = conn.cursor()
+        cur.execute(tables.update_general, item)
+        conn.commit()
+
+    def create_content_entry(self, conn, item):
+        sql = ''' INSERT INTO content(file_name,description,post_date,story,posted,jid)
+                      VALUES(?,?,?,?,?,?); '''
+        cur = conn.cursor()
+        cur.execute(sql, item)
+        conn.commit()
+        return cur.lastrowid
 
 if __name__ == '__main__':
     ConfigurationSetup().update_content_config()
