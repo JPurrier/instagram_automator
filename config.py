@@ -98,23 +98,26 @@ class ConfigurationSetup(object):
         if(jid is None and description is None and post_date is None
             and story is None and file_name is None):
             # Check each item in directory to see if its in the database
-            for content in list_of_content:
-                i = 0
-               # if database is empty
-                if not db_entries:
-                    ConfigurationSetup().initialise_db_content(list_of_content)
-                    return 'Database Empty initialisation run'
-                else:
-                    for db_row in db_entries:
-                        # if in database continue
-                        if content in db_row:
-                            print('in db :' + content)
-                            i = 1
+            if not db_entries:
+                ConfigurationSetup().initialise_db_content(list_of_content)
+                return 'Database Empty initialisation run'
+
+            for db_row in db_entries:
+                for content in list_of_content:
+                    i = 0
+                   # if database is empty
+
+                    # if in database continue
+
+                    if content in db_row:
+                        print('in db :' + content)
+                        i = 1
+                        continue
+                    else:
+                        # if not in database get hash / jid
+                        if i == 1:
                             continue
-                        else:
-                            # if not in database get hash / jid
-                            if i == 1:
-                                continue
+
                             jid = ConfigurationSetup().get_content_hash(storage_config['content_folder'] + '\\' + content)
                             print('jID: {}'.format(jid))
                             # compare hash with jid if exist in database update
@@ -128,9 +131,8 @@ class ConfigurationSetup(object):
                                 c.execute(tables.update_name, update_content)
                                 db_connection.commit()
                                 i = 1
-
                             else:
-                                if 1 == 1:
+                                if i == 1:
                                     continue
                                 # add item to database
                                 #Get Jid MD5 Hash
@@ -142,7 +144,6 @@ class ConfigurationSetup(object):
                                 c.execute(tables.add_content,data_to_input_into_db)
                                 db_connection.commit()
                                 i = 1
-
 
 
 
