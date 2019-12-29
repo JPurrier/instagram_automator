@@ -99,39 +99,50 @@ class ConfigurationSetup(object):
             and story is None and file_name is None):
             # Check each item in directory to see if its in the database
             for content in list_of_content:
-                # if in database continue
+                i = 0
+               # if database is empty
                 if not db_entries:
                     ConfigurationSetup().initialise_db_content(list_of_content)
                     return 'Database Empty initialisation run'
-                for db_row in db_entries:
-                    if content in db_row:
-                        print('in db :' + content)
-                        pass
-                    else:
-                        # if not in database get hash / jid
-                        jid = ConfigurationSetup().get_content_hash(storage_config['content_folder'] + '\\' + content)
-                        print('jID: {}'.format(jid))
-                        # compare hash with jid if exist in database update
-                        if jid in db_row:
-                            print('Need to update name in db')
-                            print('hash in db: ' + jid)
-                            print('name:' + content)
-                            print(db_row)
-                            # update name field with new name
-                            update_content = (content,db_row[0])
-                            c.execute(tables.update_name, update_content)
-                            db_connection.commit()
+                else:
+                    for db_row in db_entries:
+                        # if in database continue
+                        if content in db_row:
+                            print('in db :' + content)
+                            i = 1
                             continue
                         else:
-                            # add item to database
-                            #Get Jid MD5 Hash
-                            jid = ConfigurationSetup().get_content_hash(
-                                storage_config['content_folder'] + '\\' + content)
-                            data_to_input_into_db = (content, jid)
-                            print('Added: {} | {}'.format(content, jid))
+                            # if not in database get hash / jid
+                            if i == 1:
+                                continue
+                            jid = ConfigurationSetup().get_content_hash(storage_config['content_folder'] + '\\' + content)
+                            print('jID: {}'.format(jid))
+                            # compare hash with jid if exist in database update
+                            if jid in db_row:
+                                print('Need to update name in db')
+                                print('hash in db: ' + jid)
+                                print('name:' + content)
+                                print(db_row)
+                                # update name field with new name
+                                update_content = (content,db_row[0])
+                                c.execute(tables.update_name, update_content)
+                                db_connection.commit()
+                                i = 1
 
-                            c.execute(tables.add_content,data_to_input_into_db)
-                            db_connection.commit()
+                            else:
+                                if 1 == 1:
+                                    continue
+                                # add item to database
+                                #Get Jid MD5 Hash
+                                jid = ConfigurationSetup().get_content_hash(
+                                    storage_config['content_folder'] + '\\' + content)
+                                data_to_input_into_db = (content, jid)
+                                print('Added: {} | {}'.format(content, jid))
+
+                                c.execute(tables.add_content,data_to_input_into_db)
+                                db_connection.commit()
+                                i = 1
+
 
 
 
